@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JAMB CBT 2026</title>
+
+<!-- ADMOB - Replace with your ID later -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box;font-family:Arial}
+body{margin:0;background:#f2f5f2}
+header{background:#0a8a0a;color:#fff;padding:15px;text-align:center;font-weight:bold;font-size:20px}
+.card{background:#fff;margin:10px;padding:15px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);cursor:pointer}
+.card:hover{background:#e8f5e9}
+.btn{width:100%;padding:15px;background:#0a8a0a;color:#fff;border:0;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}
+.btn-orange{background:#ff7a00}
+.ad-box{background:#fff;border:2px dashed #0a8a0a;text-align:center;padding:10px;margin:10px;border-radius:8px;color:#666}
+.timer{float:right;background:#000;color:#0f0;padding:5px 10px;border-radius:20px}
+.option{padding:12px;border:1px solid #ddd;border-radius:8px;margin:8px 0;cursor:pointer}
+.option.active{background:#0a8a0a;color:#fff}
+#exam{display:none}
+#result{display:none;text-align:center;padding:30px}
+</style>
+</head>
+<body>
+
+<header>JAMB CBT 2026 <span class="timer" id="timer">30:00</span></header>
+
+<!-- BANNER AD - TOP -->
+<div class="ad-box" id="banner-ad">
+  BANNER AD - Your AdMob Banner Will Show Here
+  <br><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3940256099942544" data-ad-slot="6300978111" data-ad-format="auto"></ins>
+</div>
+
+<!-- HOME -->
+<div id="home">
+  <div class="card" onclick="startExam('English')"><b>English</b><br>20 Questions • 30 Mins</div>
+  <div class="card" onclick="startExam('Mathematics')"><b>Mathematics</b><br>20 Questions • 30 Mins</div>
+  <div class="card" onclick="startExam('Physics')"><b>Physics</b><br>20 Questions • 30 Mins</div>
+  <div class="card" onclick="startExam('Chemistry')"><b>Chemistry</b><br>20 Questions • 30 Mins</div>
+  <div class="card" onclick="startExam('Biology')"><b>Biology</b><br>20 Questions • 30 Mins</div>
+  
+  <div style="padding:10px">
+    <button class="btn btn-orange" onclick="showRewarded()">▶ WATCH AD TO UNLOCK 10 YEARS PAST QUESTIONS</button>
+  </div>
+</div>
+
+<!-- EXAM -->
+<div id="exam">
+  <div style="padding:15px">
+    <div id="qCount"></div>
+    <h3 id="qText"></h3>
+    <div id="options"></div>
+    <br>
+    <button class="btn" onclick="next()">NEXT / SUBMIT</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result">
+  <h1 id="scoreText"></h1>
+  <p id="remark"></p>
+  <br>
+  <!-- INTERSTITIAL AD PLACE -->
+  <div class="ad-box">INTERSTITIAL AD - Will show after exam</div>
+  <br>
+  <button class="btn" onclick="location.reload()">Back to Home</button>
+</div>
+
+<!-- BOTTOM BANNER -->
+<div class="ad-box">BOTTOM BANNER AD</div>
+
+<script>
+// QUESTIONS - You can add 1000+ here
+const questions = [
+  {q:"What is JAMB full meaning?", o:["Joint Admission Board","Joint Admissions and Matriculation Board","Joint Matric Board"], a:1},
+  {q:"2x + 4 = 10, find x", o:["2","3","5","6"], a:1},
+  {q:"Capital of Nigeria?", o:["Lagos","Abuja","Kano"], a:1},
+  {q:"Unit of force?", o:["Watt","Newton","Joule"], a:1},
+  {q:"H2O is?", o:["Salt","Water","Acid"], a:1},
+  {q:"Powerhouse of cell?", o:["Mitochondria","Nucleus","Ribosome"], a:0},
+];
+
+let current = 0;
+let answers = [];
+let time = 1800;
+let timerInt;
+
+function startExam(subject){
+  document.getElementById('home').style.display='none';
+  document.getElementById('exam').style.display='block';
+  current=0; answers=[];
+  timerInt=setInterval(()=>{
+    time--; 
+    let m=Math.floor(time/60), s=time%60;
+    document.getElementById('timer').innerText=`${m}:${s.toString().padStart(2,'0')}`;
+    if(time<=0) submit();
+  },1000);
+  showQ();
+}
+
+function showQ(){
+  let q=questions[current % questions.length];
+  document.getElementById('qCount').innerText=`Question ${current+1} of ${questions.length}`;
+  document.getElementById('qText').innerText=q.q;
+  let html='';
+  q.o.forEach((opt,i)=>{
+    let active = answers[current]==i ? 'active' : '';
+    html+=`<div class="option ${active}" onclick="pick(${i})">${opt}</div>`;
+  });
+  document.getElementById('options').innerHTML=html;
+}
+
+function pick(i){ answers[current]=i; showQ(); }
+
+function next(){
+  if(current < questions.length-1){ current++; showQ(); }
+  else{ submit(); }
+}
+
+function submit(){
+  clearInterval(timerInt);
+  let score=0;
+  for(let k=0;k<questions.length;k++){ if(answers[k]==questions[k].a) score++; }
+  document.getElementById('exam').style.display='none';
+  document.getElementById('result').style.display='block';
+  document.getElementById('scoreText').innerText=`${score} / ${questions.length}`;
+  document.getElementById('remark').innerText=score>=questions.length/2?'You Pass! 🔥':'Try Again 💪';
+  // SHOW INTERSTITIAL AD HERE
+  // if you use AdMob, call interstitial.show();
+}
+
+function showRewarded(){
+  alert('Rewarded Ad - User watched ad and unlocked past questions! Replace this with AdMob rewarded code later.');
+  // Paste your AdMob Rewarded Ad code here later:
+  // rewardedAd.show();
+}
+</script>
+</body>
+</html>
